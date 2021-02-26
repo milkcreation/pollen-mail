@@ -7,7 +7,7 @@ namespace Pollen\Mail;
 use Exception;
 use Html2Text\Html2Text;
 use Pelago\Emogrifier\CssInliner;
-use Pollen\Mail\Driver\PhpMailerDriver;
+use Pollen\Mail\Drivers\PhpMailerDriver;
 use Pollen\Support\Arr;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagAwareTrait;

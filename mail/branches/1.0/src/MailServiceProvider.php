@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pollen\Mail;
 
 use Pollen\Container\BaseServiceProvider;
-use Pollen\Mail\Driver\PhpMailerDriver;
+use Pollen\Mail\Drivers\PhpMailerDriver;
 use PHPMailer\PHPMailer\PHPMailer;
 use Pollen\Support\Env;
 

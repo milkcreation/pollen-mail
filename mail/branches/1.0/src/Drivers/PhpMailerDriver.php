@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pollen\Mail\Driver;
+namespace Pollen\Mail\Drivers;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use Pollen\Mail\MailerDriverInterface;
