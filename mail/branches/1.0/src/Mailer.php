@@ -233,6 +233,14 @@ class Mailer implements MailerInterface
     /**
      * @inheritDoc
      */
+    public function defaultConfig() : array
+    {
+        return (array)$this->getDefaults();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getDefaults(string $key = null, $default = null)
     {
         $attrs = array_merge([
@@ -250,7 +258,7 @@ class Mailer implements MailerInterface
             'charset'      => 'utf-8',
             'encoding'     => '8bit',
             'content_type' => 'multipart/alternative',
-            'css'          => file_get_contents(__DIR__ .'/Resources/assets/css/styles.css'),
+            'css'          => file_get_contents(dirname(__DIR__) . '/resources/assets/css/styles.css'),
             'inline_css'   => true,
             'vars'         => [],
             'viewer'       => [],
@@ -268,7 +276,7 @@ class Mailer implements MailerInterface
      */
     public function getDriver(): MailerDriverInterface
     {
-        if (is_null($this->driver)) {
+        if ($this->driver === null) {
             $this->driver = $this->containerHas(MailerDriverInterface::class)
                 ? $this->containerGet(MailerDriverInterface::class) : new PhpMailerDriver();
         }
@@ -281,7 +289,7 @@ class Mailer implements MailerInterface
      */
     public function getQueue(): MailerQueueInterface
     {
-        if (is_null($this->queue)) {
+        if ($this->queue === null) {
             $this->queue = $this->containerHas(MailerQueueInterface::class)
                 ? $this->containerGet(MailerQueueInterface::class) : new MailerQueue($this);
         }
@@ -305,7 +313,7 @@ class Mailer implements MailerInterface
         $this->resetDriver();
 
         $params = array_merge(
-            $this->config()->all(), is_array($mail) ?: []
+            $this->config()->all(), is_array($mail) ? $mail : []
         );
 
         return $this->mailable = $this->createMailable($params);
@@ -423,6 +431,7 @@ class Mailer implements MailerInterface
         }
 
         switch ($mail->params('content_type')) {
+            default:
             case 'multipart/alternative' :
                 $this->getDriver()->setHtml($html);
                 $this->getDriver()->setText($text);

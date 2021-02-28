@@ -1,12 +1,12 @@
 <?php
 /**
- * @var Pollen\Mail\MailableViewTemplateInterface $this
+ * @var Pollen\Mail\MailableViewLoaderInterface $this
  */
 ?>
 <?php if ($logo = $this->param('infos.logo')) : ?>
     <tr class="rowHeaderContent">
         <td>
-            <?php echo is_array($logo) ? partial('tag', [
+            <?php echo is_array($logo) ? $this->partial('tag', [
                 'attrs' => [
                     'class'  => 'BodyHeader-logo',
                     'src'    => $logo['src'] ?? '',

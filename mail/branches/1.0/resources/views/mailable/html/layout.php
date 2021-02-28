@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Mail\MailableViewTemplateInterface $this
+ * @var Pollen\Mail\MailableViewLoaderInterface $this
  */
 ?>
 <!DOCTYPE html>

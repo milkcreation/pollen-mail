@@ -11,3 +11,18 @@ Pollen **Mail** Component provides an api to create and send email.
 ```bash
 composer require pollen-solutions/mail
 ```
+
+## Basic Usage
+
+```php
+use Pollen\Mail\Mailer;
+
+$mailer = new Mailer(
+    [
+        'to'   => ['hello@example.com', 'Hello Example'],
+        'from' => ['contact@example.com', 'Contact Example'],
+    ]
+);
+
+$mailer->debug();
+```

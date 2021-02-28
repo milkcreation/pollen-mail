@@ -10,11 +10,15 @@ use Pollen\Http\ResponseInterface;
 use Pollen\Support\ParamsBag;
 use Pollen\Support\Concerns\ParamsBagAwareTrait;
 use Pollen\Support\Proxy\MailerProxy;
+use Pollen\Support\Proxy\PartialProxy;
+use Pollen\View\ViewEngine;
+use Pollen\View\ViewEngineInterface;
 
 class Mailable implements MailableInterface
 {
-    use ParamsBagAwareTrait;
     use MailerProxy;
+    use ParamsBagAwareTrait;
+    use PartialProxy;
 
     /**
      * Instance des données de message.
@@ -24,7 +28,7 @@ class Mailable implements MailableInterface
 
     /**
      * Instance du moteur de gabarits d'affichage.
-     * @var MailableViewEngineInterface
+     * @var ViewEngineInterface
      */
     protected $viewEngine;
 
@@ -121,7 +125,7 @@ class Mailable implements MailableInterface
     /**
      * @inheritDoc
      */
-    public function view(?string $view = null, array $data = []): string
+    public function view(?string $view = null, array $data = [])
     {
         if (is_null($this->viewEngine)) {
             $directory = null;
@@ -153,7 +157,7 @@ class Mailable implements MailableInterface
             }
 
             if ($directory === null) {
-                $directory = $this->mailer()->resources('/views');
+                $directory = $this->mailer()->resources('/views/mailable');
                 if (!file_exists($directory)) {
                     throw new InvalidArgumentException(
                         'Mailable must have an accessible view directory'
@@ -161,11 +165,12 @@ class Mailable implements MailableInterface
                 }
             }
 
-            $this->viewEngine = $this->mailer()->containerHas(MailableViewEngine::class)
-                ? $this->mailer()->containerGet(MailableViewEngine::class)
-                : new MailableViewEngine();
+            $this->viewEngine = new ViewEngine();
+            if ($container = $this->mailer()->getContainer()) {
+                $this->viewEngine->setContainer($container);
+            }
 
-            $this->viewEngine->setDirectory($directory)->setDelegate($this);
+            $this->viewEngine->setDirectory($directory)->setDelegate($this)->setLoader(MailableViewLoader::class);
 
             if ($overrideDir !== null) {
                 $this->viewEngine->addFolder('_override_dir', $overrideDir, true);

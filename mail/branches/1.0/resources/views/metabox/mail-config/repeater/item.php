@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Field\FieldViewTemplateInterface $this
+ * @var Pollen\Field\FieldViewLoaderInterface $this
  * @var string $name
  * @var string $index
  * @var string $value
