@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Pollen\Mail;
 
-use Pollen\View\ViewTemplateInterface;
+use Pollen\View\PartialAwareViewLoaderInterface;
+use Pollen\View\ViewLoaderInterface;
 
-interface MailableViewTemplateInterface extends ViewTemplateInterface
+interface MailableViewLoaderInterface extends PartialAwareViewLoaderInterface, ViewLoaderInterface
 {
     /**
      * Récupération de l'instance du pilote.

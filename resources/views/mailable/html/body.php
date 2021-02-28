@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Mail\MailableViewTemplateInterface $this
+ * @var Pollen\Mail\MailableViewLoaderInterface $this
  */
 ?>
 <tr class="rowBodyContent">
@@ -27,7 +27,7 @@
                         ); ?>
                     </p>
                     <p>
-                        <?php echo partial('tag', [
+                        <?php echo $this->partial('tag', [
                             'attrs'   => [
                                 'clicktracking' => 'off',
                                 'href'          => home_url('/'),
@@ -50,7 +50,7 @@
                         ); ?>
                     </p>
                     <p>
-                        <?php echo partial('tag', [
+                        <?php echo $this->partial('tag', [
                             'attrs'   => [
                                 'clicktracking' => 'off',
                                 'href'          => 'mailto:' . get_option('admin_email'),
@@ -75,7 +75,7 @@
                            style="margin: auto;">
                         <tr>
                             <td>
-                                <?php echo partial('tag', [
+                                <?php echo $this->partial('tag', [
                                     'attrs'   => [
                                         'clicktracking' => 'off',
                                         'href'          => home_url('/'),

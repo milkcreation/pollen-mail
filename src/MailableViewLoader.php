@@ -4,17 +4,36 @@ declare(strict_types=1);
 
 namespace Pollen\Mail;
 
-use Pollen\View\ViewTemplate;
+use Pollen\View\PartialAwareViewLoader;
+use Pollen\View\ViewLoader;
 use RuntimeException;
 
-class MailableViewTemplate extends ViewTemplate implements MailableViewTemplateInterface
+class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterface
 {
+    use PartialAwareViewLoader;
+
     /**
      * @inheritDoc
      */
     public function driver(): ?MailerDriverInterface
     {
         return $this->getDelegate()->mailer()->getDriver();
+    }
+
+    /**
+     * Récupération de l'instance de délégation.
+     *
+     * @return MailableInterface
+     */
+    protected function getDelegate(): MailableInterface
+    {
+        /** @var MailableInterface|object|null $delegate */
+        $delegate = $this->engine->getDelegate();
+        if ($delegate instanceof MailableInterface) {
+            return $delegate;
+        }
+
+        throw new RuntimeException('MailableViewLoader must have a delegate Mailable instance');
     }
 
     /**
@@ -34,22 +53,6 @@ class MailableViewTemplate extends ViewTemplate implements MailableViewTemplateI
             $contact = $this->linearizeContact(...$contact);
         }
         return $contacts;
-    }
-
-    /**
-     * Récupération de l'instance de délégation.
-     *
-     * @return MailableInterface
-     */
-    protected function getDelegate(): MailableInterface
-    {
-        /** @var MailableInterface|object|null $delegate */
-        $delegate = $this->engine->getDelegate();
-        if ($delegate instanceof MailableInterface) {
-            return $delegate;
-        }
-
-        throw new RuntimeException('MailableViewTemplate must have a delegate Mailable instance');
     }
 
     /**

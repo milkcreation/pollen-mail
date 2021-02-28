@@ -8,8 +8,10 @@ use DateTimeInterface;
 use Pollen\Http\ResponseInterface;
 use Pollen\Support\Concerns\ParamsBagAwareTraitInterface;
 use Pollen\Support\Proxy\MailerProxyInterface;
+use Pollen\Support\Proxy\PartialProxyInterface;
+use Pollen\View\ViewEngineInterface;
 
-interface MailableInterface extends MailerProxyInterface, ParamsBagAwareTraitInterface
+interface MailableInterface extends MailerProxyInterface, ParamsBagAwareTraitInterface, PartialProxyInterface
 {
     /**
      * Résolution de sortie de la classe sous la forme d'une chaîne de caractères.
@@ -79,7 +81,7 @@ interface MailableInterface extends MailerProxyInterface, ParamsBagAwareTraitInt
      * @param string|null $view
      * @param array $data
      *
-     * @return string
+     * @return ViewEngineInterface|string
      */
-    public function view(?string $view = null, array $data = []): string;
+    public function view(?string $view = null, array $data = []);
 }
