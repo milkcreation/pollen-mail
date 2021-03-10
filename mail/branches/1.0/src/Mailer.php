@@ -66,7 +66,7 @@ class Mailer implements MailerInterface
      *
      * @return void
      */
-    public function __construct(array $config = [], Container $container = null)
+    public function __construct(array $config = [], ?Container $container = null)
     {
         $this->setConfig($config);
 
@@ -91,7 +91,6 @@ class Mailer implements MailerInterface
         }
         throw new RuntimeException(sprintf('Unavailable [%s] instance', __CLASS__));
     }
-
 
     /**
      * Traitement récursif d'une liste de contacts.
