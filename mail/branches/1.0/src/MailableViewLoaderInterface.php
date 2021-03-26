@@ -10,21 +10,123 @@ use Pollen\View\ViewLoaderInterface;
 interface MailableViewLoaderInterface extends PartialAwareViewLoaderInterface, ViewLoaderInterface
 {
     /**
-     * Récupération de l'instance du pilote.
+     * Récupération de la liste des pièces jointes.
      *
-     * @return MailerDriverInterface|null
+     * @return array
      */
-    public function driver(): ?MailerDriverInterface;
+    public function getAttachments(): array;
 
     /**
-     * Récupération d'un paramètre.
+     * Récupération de la liste des destinataires en copie cachée.
      *
-     * @param string $key
-     * @param mixed $default
-     *
-     * @return mixed
+     * @return array
      */
-    public function param(string $key, $default = null);
+    public function getBcc(): array;
+
+    /**
+     * Récupération de la liste des destinataires en copie carbone.
+     *
+     * @return array
+     */
+    public function getCc(): array;
+
+    /**
+     * Récupération de l'encodage des caractères.
+     *
+     * @return string
+     */
+    public function getCharset(): string;
+
+    /**
+     * Récupération du type de contenu du message.
+     *
+     * @return string
+     */
+    public function getContentType(): string;
+
+    /**
+     * Récupération de l'encodage du message.
+     *
+     * @return string
+     */
+    public function getEncoding(): string;
+
+    /**
+     * Récupération de l'expéditeur du message.
+     *
+     * @return array
+     */
+    public function getFrom(): array;
+
+    /**
+     * Récupération de la liste des entêtes du messages.
+     *
+     * @return array
+     */
+    public function getHeaders(): array;
+
+    /**
+     * Récupération du message au format HTML.
+     *
+     * @return string
+     */
+    public function getHtml(): string;
+
+    /**
+     * Récupération de la langue d'expédition du message.
+     *
+     * @return string
+     */
+    public function getLocale(): string;
+
+    /**
+     * Récupération du message au format texte brut ou HTML.
+     *
+     * @return string
+     */
+    public function getMessage(): string;
+
+    /**
+     * Récupération de la liste des destinataires en réponse au message.
+     *
+     * @return array
+     */
+    public function getReplyTo(): array;
+
+    /**
+     * Récupération de l'objet du message.
+     *
+     * @return string
+     */
+    public function getSubject(): string;
+
+    /**
+     * Récupération du message au format texte brut.
+     *
+     * @return string
+     */
+    public function getText(): string;
+
+    /**
+     * Récupération de la liste des destinataires.
+     *
+     * @return array
+     */
+    public function getTo(): array;
+
+    /**
+     * Vérification de la présence du format HTML dans le message.
+     *
+     * @return bool
+     */
+    public function hasHtml(): bool;
+
+    /**
+     * Vérification de la présence du format texte brut dans le message.
+     *
+     * @return bool
+     */
+    public function hasText(): bool;
 
     /**
      * Linéarisation des informations de contact.

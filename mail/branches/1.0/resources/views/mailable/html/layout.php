@@ -4,16 +4,16 @@
  */
 ?>
 <!DOCTYPE html>
-<html lang="fr" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html lang="<?php echo $this->getLocale(); ?>" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-    <meta charset="<?php echo $this->driver()->getCharset(); ?>">
+    <meta charset="<?php echo $this->getCharset(); ?>">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="x-apple-disable-message-reformatting">
     <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <title><?php echo $this->driver()->getSubject(); ?></title>
+    <title><?php echo $this->getSubject(); ?></title>
 
     <!--[if gte mso 9]>
     <xml>
@@ -24,7 +24,7 @@
     </xml>
     <![endif]-->
 
-    <?php if ($css = $this->param('css')) : ?>
+    <?php if ($css = $this->get('css')) : ?>
         <style><?php echo $css; ?></style>
     <?php endif; ?>
 </head>

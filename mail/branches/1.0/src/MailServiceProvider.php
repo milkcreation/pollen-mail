@@ -12,13 +12,13 @@ use Pollen\Support\Env;
 class MailServiceProvider extends BaseServiceProvider
 {
     /**
-     * Liste des noms de qualification des services fournis.
      * @var string[]
      */
     protected $provides = [
-        MailerInterface::class,
-        MailerDriverInterface::class,
+        MailManagerInterface::class,
         MailableInterface::class,
+        MailerDriverInterface::class,
+        MailQueueFactoryInterface::class
     ];
 
     /**
@@ -27,9 +27,9 @@ class MailServiceProvider extends BaseServiceProvider
     public function register(): void
     {
         $this->getContainer()->share(
-            MailerInterface::class,
+            MailManagerInterface::class,
             function () {
-                return new Mailer([], $this->getContainer());
+                return new MailManager([], $this->getContainer());
             }
         );
 
@@ -40,27 +40,17 @@ class MailServiceProvider extends BaseServiceProvider
             }
         );
 
-        $this->getContainer()->share(
+        $this->getContainer()->add(
             MailableInterface::class,
             function () {
-                return new Mailable($this->getContainer()->get(MailerInterface::class));
+                return new Mailable($this->getContainer()->get(MailManagerInterface::class));
             }
         );
 
-        $this->registerViewEngine();
-    }
-
-    /**
-     * Déclaration du moteur d'affichage.
-     *
-     * @return void
-     */
-    public function registerViewEngine(): void
-    {
-        $this->getContainer()->add(
-            MailableViewEngineInterface::class,
+        $this->getContainer()->share(
+            MailQueueFactoryInterface::class,
             function () {
-                return new MailableViewEngine();
+                return new MailQueueFactory($this->getContainer()->get(MailManagerInterface::class));
             }
         );
     }

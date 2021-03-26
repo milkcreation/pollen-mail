@@ -3,7 +3,7 @@
  * @var Pollen\Mail\MailableViewLoaderInterface $this
  */
 ?>
-<?php if ($logo = $this->param('infos.logo')) : ?>
+<?php if ($logo = $this->get('infos.logo')) : ?>
     <tr class="rowHeaderContent">
         <td>
             <?php echo is_array($logo) ? $this->partial('tag', [
@@ -12,11 +12,11 @@
                     'src'    => $logo['src'] ?? '',
                     'width'  => $logo['width'] ?? 200,
                     'height' => $logo['height'] ?? 40,
-                    'alt'    => $logo['alt'] ?? __('Logo', 'tify'),
+                    'alt'    => $logo['alt'] ?? 'Logo',
                     'border' => 0,
                 ],
                 'tag'   => 'img',
-            ]) : $logo; ?>
+            ]) : (string)$logo; ?>
         </td>
     </tr>
 <?php endif;

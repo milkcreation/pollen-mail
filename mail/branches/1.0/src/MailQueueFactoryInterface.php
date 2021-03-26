@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Pollen\Mail;
 
 use DateTimeInterface;
-use Pollen\Support\Proxy\MailerProxyInterface;
+use Pollen\Support\Proxy\MailProxyInterface;
 
-interface MailerQueueInterface extends MailerProxyInterface
+interface MailQueueFactoryInterface extends MailProxyInterface
 {
     /**
      * Ajout d'un élément dans la file d'attente
