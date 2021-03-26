@@ -101,6 +101,14 @@ class PhpMailerDriver implements MailerDriverInterface
     /**
      * @inheritDoc
      */
+    public function getAttachments(): array
+    {
+        return $this->phpMailer->getAttachments();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getBcc(): array
     {
         return $this->phpMailer->getBccAddresses();
@@ -133,6 +141,22 @@ class PhpMailerDriver implements MailerDriverInterface
     /**
      * @inheritDoc
      */
+    public function getEncoding(): string
+    {
+        return $this->phpMailer->Encoding;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFrom(): array
+    {
+        return [$this->phpMailer->From, $this->phpMailer->FromName];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getHeaders(): array
     {
         return explode($this->phpMailer::getLE(), $this->phpMailer->createHeader());
@@ -142,6 +166,17 @@ class PhpMailerDriver implements MailerDriverInterface
      * @inheritDoc
      */
     public function getHtml(): string
+    {
+        if (!$this->hasHtml()) {
+            return '';
+        }
+        return $this->phpMailer->Body;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessage(): string
     {
         return $this->phpMailer->Body;
     }
@@ -167,7 +202,10 @@ class PhpMailerDriver implements MailerDriverInterface
      */
     public function getText(): string
     {
-        return $this->phpMailer->AltBody;
+        if (!$this->hasText()) {
+            return '';
+        }
+        return $this->hasHtml() ? $this->phpMailer->AltBody : $this->phpMailer->Body;
     }
 
     /**
@@ -176,6 +214,22 @@ class PhpMailerDriver implements MailerDriverInterface
     public function getTo(): array
     {
         return $this->phpMailer->getToAddresses();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasHtml(): bool
+    {
+        return in_array($this->getContentType(), ['text/html', 'multipart/alternative']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasText(): bool
+    {
+        return in_array($this->getContentType(), ['text/plain', 'multipart/alternative']);
     }
 
     /**

@@ -63,6 +63,13 @@ interface MailerDriverInterface
     public function error(): string;
 
     /**
+     * Récupération de la liste des pièces jointes.
+     *
+     * @return array
+     */
+    public function getAttachments(): array;
+
+    /**
      * Récupération de la liste des destinataires en copie cachée.
      *
      * @return array
@@ -91,6 +98,20 @@ interface MailerDriverInterface
     public function getContentType(): string;
 
     /**
+     * Récupération de l'encodage du message.
+     *
+     * @return string
+     */
+    public function getEncoding(): string;
+
+    /**
+     * Récupération de l'expéditeur du message.
+     *
+     * @return array
+     */
+    public function getFrom(): array;
+
+    /**
      * Récupération de la liste des entêtes.
      *
      * @return array
@@ -103,6 +124,13 @@ interface MailerDriverInterface
      * @return string
      */
     public function getHtml(): string;
+
+    /**
+     * Récupération du message au format Texte brut ou HTML.
+     *
+     * @return string
+     */
+    public function getMessage(): string;
 
     /**
      * Récupération de la liste des destinataires en réponse.
@@ -131,6 +159,20 @@ interface MailerDriverInterface
      * @return array
      */
     public function getTo(): array;
+
+    /**
+     * Vérification de la présence du format HTML dans le message.
+     *
+     * @return bool
+     */
+    public function hasHtml(): bool;
+
+    /**
+     * Vérification de la présence du format texte brut dans le message.
+     *
+     * @return bool
+     */
+    public function hasText(): bool;
 
     /**
      * Préparation de l'email en vue de l'expédition.

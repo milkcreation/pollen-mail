@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Pollen\Mail;
 
-use Pollen\Support\Proxy\MailerProxy;
+use Pollen\Support\Proxy\MailProxy;
 
-class MailerQueue implements MailerQueueInterface
+class MailQueueFactory implements MailQueueFactoryInterface
 {
-    use MailerProxy;
+    use MailProxy;
 
     /**
-     * @param MailerInterface
+     * @param MailManagerInterface|null $mailManager
      */
-    public function __construct(MailerInterface $mailer)
+    public function __construct(?MailManagerInterface $mailManager = null)
     {
-        $this->setMailer($mailer);
+        if ($mailManager !== null) {
+            $this->setMailManager($mailManager);
+        }
 
         /*db()->register('mail.queue', [
             'name'          => 'mail_queue',
