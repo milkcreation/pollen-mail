@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Pollen\Mail\Drivers;
 
+use BadMethodCallException;
+use InvalidArgumentException;
 use PHPMailer\PHPMailer\PHPMailer;
 use Pollen\Mail\MailerDriverInterface;
+use Throwable;
 use Exception;
 
+/**
+ * @mixin PHPMailer
+ */
 class PhpMailerDriver implements MailerDriverInterface
 {
     /**
@@ -17,8 +23,6 @@ class PhpMailerDriver implements MailerDriverInterface
     protected $phpMailer;
 
     /**
-     * CONSTRUCTEUR.
-     *
      * @param PHPMailer|null $phpmailer Instance de PHPMailer.
      *
      * @return void
@@ -26,6 +30,103 @@ class PhpMailerDriver implements MailerDriverInterface
     public function __construct(?PHPMailer $phpmailer = null)
     {
         $this->phpMailer = $phpmailer ?: new PHPMailer();
+    }
+
+    /**
+     * Délégation d'appel des méthodes du PHPMailer.
+     *
+     * @param string $method
+     * @param array $arguments
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     */
+    public function __call(string $method, array $arguments)
+    {
+        try {
+            return $this->phpMailer->{$method}(...$arguments);
+        } catch(Exception $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            throw new BadMethodCallException(
+                sprintf(
+                    '[%s] Delegate PHPMailer method call [%s] throws an exception: %s',
+                    __CLASS__,
+                    $method,
+                    $e->getMessage()
+                ), 0, $e
+            );
+        }
+    }
+
+    /**
+     * Délégation d'appel de récupération d'un argument de PHPMailer.
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        try {
+            return $this->phpMailer->$key;
+        } catch(Throwable $e) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '[%s] Delegate PHPMailer argument get call [%s] throws an exception: %s',
+                    __CLASS__,
+                    $key,
+                    $e->getMessage()
+                )
+            );
+        }
+    }
+
+    /**
+     * Délégation d'appel de définition d'un argument de PHPMailer.
+     *
+     * @param mixed $key
+     *
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        try {
+            $this->phpMailer->$key = $value;
+        } catch(Throwable $e) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '[%s] Delegate PHPMailer argument set call [%s] throws an exception: %s',
+                    __CLASS__,
+                    $key,
+                    $e->getMessage()
+                )
+            );
+        }
+    }
+
+    /**
+     * Délégation d'appel d'existance d'un argument de PHPMailer.
+     *
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        try {
+            return isset($this->phpMailer->$key);
+        } catch(Throwable $e) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '[%s] Delegate PHPMailer argument isset call [%s] throws an exception: %s',
+                    __CLASS__,
+                    $key,
+                    $e->getMessage()
+                )
+            );
+        }
     }
 
     /**

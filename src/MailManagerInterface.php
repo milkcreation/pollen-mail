@@ -8,10 +8,15 @@ use DateTimeInterface;
 use InvalidArgumentException;
 use Pollen\Support\Concerns\BootableTraitInterface;
 use Pollen\Support\Concerns\ConfigBagAwareTraitInterface;
+use Pollen\Support\Concerns\ResourcesAwareTraitInterface;
 use Pollen\Support\ParamsBag;
 use Pollen\Support\Proxy\ContainerProxyInterface;
 
-interface MailManagerInterface extends BootableTraitInterface, ConfigBagAwareTraitInterface, ContainerProxyInterface
+interface MailManagerInterface extends
+    BootableTraitInterface,
+    ConfigBagAwareTraitInterface,
+    ContainerProxyInterface,
+    ResourcesAwareTraitInterface
 {
     /**
      * Chargement.
@@ -83,15 +88,6 @@ interface MailManagerInterface extends BootableTraitInterface, ConfigBagAwareTra
     public function queue($mailableDef = null, $date = 'now', array $context = []): int;
 
     /**
-     * Chemin absolu vers une ressource (fichier|répertoire).
-     *
-     * @param string|null $path Chemin relatif vers la ressource.
-     *
-     * @return string
-     */
-    public function resources(?string $path = null): string;
-
-    /**
      * Envoi d'un message.
      *
      * @param MailableInterface|array|null $mailableDef Instance de l'email|Paramètres d'email|Email courant.
@@ -119,11 +115,11 @@ interface MailManagerInterface extends BootableTraitInterface, ConfigBagAwareTra
     public function setMailable($mailableDef = null): MailManagerInterface;
 
     /**
-     * Définition du chemin absolu vers le répertoire des ressources.
+     * Définition de la fonction de rappel de configuration du pilote d'expédition.
      *
-     * @param string $resourceBaseDir
+     * @param callable $transportConfigCallback
      *
      * @return static
      */
-    public function setResourcesBaseDir(string $resourceBaseDir): MailManagerInterface;
+    public function setTransportConfigCallback(callable $transportConfigCallback): MailManagerInterface;
 }

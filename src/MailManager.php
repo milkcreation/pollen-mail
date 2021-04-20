@@ -11,8 +11,8 @@ use Pollen\Mail\Drivers\PhpMailerDriver;
 use Pollen\Support\Arr;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagAwareTrait;
+use Pollen\Support\Concerns\ResourcesAwareTrait;
 use Pollen\Support\Exception\ManagerRuntimeException;
-use Pollen\Support\Filesystem;
 use Pollen\Support\Proxy\ContainerProxy;
 use Pollen\Support\ParamsBag;
 use Pollen\Validation\Validator as v;
@@ -26,6 +26,7 @@ class MailManager implements MailManagerInterface
     use BootableTrait;
     use ConfigBagAwareTrait;
     use ContainerProxy;
+    use ResourcesAwareTrait;
 
     /**
      * Instance principale.
@@ -52,10 +53,9 @@ class MailManager implements MailManagerInterface
     protected $queueFactory;
 
     /**
-     * Chemin vers le répertoire des ressources.
-     * @var string|null
+     * @var callable|null
      */
-    protected $resourcesBaseDir;
+    protected $transportConfigCallback;
 
     /**
      * Liste des paramètres de mail par défaut.
@@ -296,8 +296,15 @@ class MailManager implements MailManagerInterface
      */
     public function getMailer(): MailerDriverInterface
     {
-        return $this->containerHas(MailerDriverInterface::class)
+        $mailer = $this->containerHas(MailerDriverInterface::class)
             ? $this->containerGet(MailerDriverInterface::class) : new PhpMailerDriver();
+
+        $transport = $this->transportConfigCallback;
+        if ($transport && is_callable($transport)) {
+            $transport($mailer);
+        }
+
+        return $mailer;
     }
 
     /**
@@ -329,24 +336,6 @@ class MailManager implements MailManagerInterface
         $this->setMailable($mailableDef);
 
         return $this->mailable->queue($date, $context);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function resources(?string $path = null): string
-    {
-        if ($this->resourcesBaseDir === null) {
-            $this->resourcesBaseDir = Filesystem::normalizePath(
-                realpath(dirname(__DIR__) . '/resources/')
-            );
-
-            if (!file_exists($this->resourcesBaseDir)) {
-                throw new RuntimeException('Field ressources directory unreachable');
-            }
-        }
-
-        return is_null($path) ? $this->resourcesBaseDir : $this->resourcesBaseDir . Filesystem::normalizePath($path);
     }
 
     /**
@@ -409,9 +398,9 @@ class MailManager implements MailManagerInterface
     /**
      * @inheritDoc
      */
-    public function setResourcesBaseDir(string $resourceBaseDir): MailManagerInterface
+    public function setTransportConfigCallback(callable $transportConfigCallback): MailManagerInterface
     {
-        $this->resourcesBaseDir = Filesystem::normalizePath($resourceBaseDir);
+        $this->transportConfigCallback = $transportConfigCallback;
 
         return $this;
     }
