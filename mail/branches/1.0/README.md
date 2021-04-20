@@ -14,15 +14,94 @@ composer require pollen-solutions/mail
 
 ## Basic Usage
 
-```php
-use Pollen\Mail\Mailer;
+### Send
 
-$mailer = new Mailer(
+```php
+use Pollen\Mail\MailManager;
+
+$mail = new MailManager(
     [
         'to'   => ['hello@example.com', 'Hello Example'],
         'from' => ['contact@example.com', 'Contact Example'],
     ]
 );
 
-$mailer->debug();
+$mail->send();
+```
+
+### Queue (coming soon)
+
+[...]
+
+### Debug
+
+```php
+use Pollen\Mail\MailManager;
+
+$mail = new MailManager(
+    [
+        'to'   => ['hello@example.com', 'Hello Example'],
+        'from' => ['contact@example.com', 'Contact Example'],
+    ]
+);
+
+$mail->debug();
+```
+
+### Through a Mailable Object
+
+#### Default Mailable instance
+
+```php
+use Pollen\Mail\MailManager;
+use Pollen\Mail\Mailable;
+
+$mail = new MailManager();
+$mailable = new Mailable($mail);
+$mailable
+    ->setFrom(['contact@example.com', 'Contact Example'])
+    ->setTo(['hello@example.com', 'Hello Example']);
+
+$mailable->send();
+```
+
+#### Own Mailable instance
+
+```php
+use Pollen\Mail\MailManager;
+use Pollen\Mail\Mailable;
+
+$mail = new MailManager();
+$mailable = new Mailable($mail);
+$mailable
+    ->setFrom(['contact@example.com', 'Contact Example'])
+    ->setTo(['hello@example.com', 'Hello Example']);
+
+$mailable->send();
+```
+
+
+## Test Usage
+
+### Configure Transport with MailHog
+
+MailHog must be installed and running on your server.
+More details : https://github.com/mailhog/MailHog
+
+```php
+use Pollen\Mail\MailManager;
+use Pollen\Mail\Drivers\PhpMailerDriver;
+
+$mail = new MailManager();
+
+$mail->setTransportConfigCallback(function (PhpMailerDriver $mailer) {
+    $mailer->isSMTP();
+    $mailer->Host = '0.0.0.0';
+    $mailer->Username = 'mailhog.example';
+    $mailer->Port = 1025;
+});
+
+$mail->send();
+
+## Visit http://0.0.0.0:8025/
 ```
