@@ -80,21 +80,28 @@ $mailable
 $mailable->send();
 ```
 
-
 ## Test Usage
 
-### Configure Transport with MailHog
+### Transport with MailHog
 
 MailHog must be installed and running on your server.
+
 More details : https://github.com/mailhog/MailHog
+
+#### Start MailHog with default configuration
+
+```bash
+~/go/bin/MailHog
+```
+
+#### Configure Pollen Mail Component for MailHog
 
 ```php
 use Pollen\Mail\MailManager;
 use Pollen\Mail\Drivers\PhpMailerDriver;
 
 $mail = new MailManager();
-
-$mail->setTransportConfigCallback(function (PhpMailerDriver $mailer) {
+$mail->setMailerConfigCallback(function (PhpMailerDriver $mailer) {
     $mailer->isSMTP();
     $mailer->Host = '0.0.0.0';
     $mailer->Username = 'mailhog.example';
@@ -102,6 +109,18 @@ $mail->setTransportConfigCallback(function (PhpMailerDriver $mailer) {
 });
 
 $mail->send();
+```
 
-## Visit http://0.0.0.0:8025/
+Visit MailHog Web Ui : [http://0.0.0.0:8025](http://0.0.0.0:8025)
+
+For Wordpress environnement add this configuration in current theme functions.php
+
+```php
+# functions.php 
+add_action('phpmailer_init', function (PHPMailer $mailer) {
+    $mailer->isSMTP();
+    $mailer->Host = '0.0.0.0';
+    $mailer->Username = 'mailhog.example';
+    $mailer->Port = 1025;
+});
 ```

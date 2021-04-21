@@ -35,6 +35,12 @@ class MailManager implements MailManagerInterface
     private static $instance;
 
     /**
+     * Liste des paramètres de mail par défaut.
+     * @var ParamsBag
+     */
+    protected $defaultsBag;
+
+    /**
      * Instance du mail courant.
      * @var MailableInterface|null
      */
@@ -47,21 +53,16 @@ class MailManager implements MailManagerInterface
     protected $mailables = [];
 
     /**
+     * Fonction de rappel de configuration du pilote d'expédition.
+     * @var callable|null
+     */
+    protected $mailerConfigCallback;
+
+    /**
      * Instance du gestionnaire de mise en file.
      * @var MailQueueFactoryInterface
      */
     protected $queueFactory;
-
-    /**
-     * @var callable|null
-     */
-    protected $transportConfigCallback;
-
-    /**
-     * Liste des paramètres de mail par défaut.
-     * @var ParamsBag
-     */
-    protected $defaultsBag;
 
     /**
      * @param array $config
@@ -299,9 +300,9 @@ class MailManager implements MailManagerInterface
         $mailer = $this->containerHas(MailerDriverInterface::class)
             ? $this->containerGet(MailerDriverInterface::class) : new PhpMailerDriver();
 
-        $transport = $this->transportConfigCallback;
-        if ($transport && is_callable($transport)) {
-            $transport($mailer);
+        $mailerConfig = $this->mailerConfigCallback;
+        if ($mailerConfig && is_callable($mailerConfig)) {
+            $mailerConfig($mailer);
         }
 
         return $mailer;
@@ -398,9 +399,9 @@ class MailManager implements MailManagerInterface
     /**
      * @inheritDoc
      */
-    public function setTransportConfigCallback(callable $transportConfigCallback): MailManagerInterface
+    public function setMailerConfigCallback(callable $mailerConfigCallback): MailManagerInterface
     {
-        $this->transportConfigCallback = $transportConfigCallback;
+        $this->mailerConfigCallback = $mailerConfigCallback;
 
         return $this;
     }
