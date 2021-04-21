@@ -117,9 +117,9 @@ interface MailManagerInterface extends
     /**
      * Définition de la fonction de rappel de configuration du pilote d'expédition.
      *
-     * @param callable $transportConfigCallback
+     * @param callable $mailerConfigCallback
      *
      * @return static
      */
-    public function setTransportConfigCallback(callable $transportConfigCallback): MailManagerInterface;
+    public function setMailerConfigCallback(callable $mailerConfigCallback): MailManagerInterface;
 }
