@@ -15,8 +15,8 @@ use Pollen\Support\Proxy\ContainerProxyInterface;
 interface MailManagerInterface extends
     BootableTraitInterface,
     ConfigBagAwareTraitInterface,
-    ContainerProxyInterface,
-    ResourcesAwareTraitInterface
+    ResourcesAwareTraitInterface,
+    ContainerProxyInterface
 {
     /**
      * Chargement.
