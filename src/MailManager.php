@@ -25,8 +25,8 @@ class MailManager implements MailManagerInterface
 {
     use BootableTrait;
     use ConfigBagAwareTrait;
-    use ContainerProxy;
     use ResourcesAwareTrait;
+    use ContainerProxy;
 
     /**
      * Instance principale.
@@ -77,6 +77,8 @@ class MailManager implements MailManagerInterface
         if ($container !== null) {
             $this->setContainer($container);
         }
+
+        $this->setResourcesBaseDir(dirname(__DIR__) . '/resources');
 
         if (!self::$instance instanceof static) {
             self::$instance = $this;
