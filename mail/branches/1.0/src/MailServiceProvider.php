@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Pollen\Mail;
 
-use Pollen\Container\BaseServiceProvider;
+use Pollen\Container\BootableServiceProvider;
 use Pollen\Mail\Drivers\PhpMailerDriver;
 use PHPMailer\PHPMailer\PHPMailer;
 use Pollen\Support\Env;
 
-class MailServiceProvider extends BaseServiceProvider
+class MailServiceProvider extends BootableServiceProvider
 {
     /**
      * @var string[]
