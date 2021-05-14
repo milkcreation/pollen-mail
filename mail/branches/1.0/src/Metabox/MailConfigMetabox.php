@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Pollen\Mail\Metabox;
 
-use tiFy\Contracts\Mail\Mailer;
-use tiFy\Metabox\Contracts\MetaboxContract;
-use tiFy\Metabox\MetaboxDriver;
+use Pollen\Mail\MailManagerInterface;
+use Pollen\Metabox\MetaboxDriver;
+use Pollen\Metabox\MetaboxManagerInterface;
 
 class MailConfigMetabox extends MetaboxDriver
 {
     /**
      * Instance du gestionnaire de mail.
-     * @var Mailer|null
+     * @var MailManagerInterface|null
      */
-    private $mailer;
+    protected $mailManager;
 
     /**
      * @inheritDoc
@@ -22,14 +22,14 @@ class MailConfigMetabox extends MetaboxDriver
     protected $name = 'mail_config';
 
     /**
-     * @param Mailer $mailer
-     * @param MetaboxContract $metaboxManager
+     * @param MailManagerInterface $mailManager
+     * @param MetaboxManagerInterface $metabox
      */
-    public function __construct(Mailer $mailer, MetaboxContract $metaboxManager)
+    public function __construct(MailManagerInterface $mailManager, MetaboxManagerInterface $metabox)
     {
-        $this->mailer = $mailer;
+        $this->mailManager = $mailManager;
 
-        parent::__construct($metaboxManager);
+        parent::__construct($metabox);
     }
 
     /**
@@ -47,10 +47,10 @@ class MailConfigMetabox extends MetaboxDriver
                 ],
                 'info'       => '',
                 'sender'     => [
-                    'title' => __('Réglages de l\'expéditeur', 'tify'),
+                    'title' => 'Réglages de l\'expéditeur',
                 ],
                 'recipients' => [
-                    'title' => __('Réglages des destinataires', 'tify'),
+                    'title' => 'Réglages des destinataires',
                 ],
             ]
         );
@@ -69,17 +69,17 @@ class MailConfigMetabox extends MetaboxDriver
      */
     public function getTitle(): string
     {
-        return $this->title ?? __('Paramètres du message', 'tify');
+        return $this->title ?? 'Paramètres du message';
     }
 
     /**
      * Récupération de l'instance du gestionnaire de mail.
      *
-     * @return Mailer|null
+     * @return MailManagerInterface
      */
-    public function mailer(): ?Mailer
+    public function mailManager(): MailManagerInterface
     {
-        return $this->mailer;
+        return $this->mailManager;
     }
 
     /**
@@ -87,7 +87,7 @@ class MailConfigMetabox extends MetaboxDriver
      */
     public function render(): string
     {
-        $defaultMail = $this->mailer()->getDefaults('to');
+        $defaultMail = $this->mailManager()->getDefaults('to');
 
         if (isset($defaultMail[0])) {
             if (!$this->get('sender.default.email')) {
@@ -100,8 +100,8 @@ class MailConfigMetabox extends MetaboxDriver
                 $this->set(
                     [
                         'sender.info' => sprintf(
-                            __('Par défaut : %s', 'tify'),
-                            join(
+                            'Par défaut : %s',
+                            implode(
                                 ' - ',
                                 array_filter([$defaultMail[0], $defaultMail[1] ?? ''])
                             )
@@ -119,8 +119,8 @@ class MailConfigMetabox extends MetaboxDriver
                 $this->set(
                     [
                         'recipients.info' => sprintf(
-                            __('Par défaut : %s', 'tify'),
-                            join(
+                            'Par défaut : %s',
+                            implode(
                                 ' - ',
                                 array_filter([$defaultMail[0], $defaultMail[1] ?? ''])
                             )
@@ -137,6 +137,6 @@ class MailConfigMetabox extends MetaboxDriver
      */
     public function viewDirectory(): string
     {
-        return $this->mailer()->resources('views/metabox/mail-config');
+        return $this->mailManager()->resources('views/metabox/mail-config');
     }
 }
