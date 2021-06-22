@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Mail\MailableViewLoaderInterface $this
+ * @var Pollen\Mail\MailableTemplate $this
  */
 $this->insert('html/header', $this->all());
 $this->insert('html/body', $this->all());

@@ -10,7 +10,7 @@ use Pollen\Support\Concerns\ParamsBagAwareTraitInterface;
 use Pollen\Support\ParamsBag;
 use Pollen\Support\Proxy\MailProxyInterface;
 use Pollen\Support\Proxy\PartialProxyInterface;
-use Pollen\View\ViewEngineInterface;
+use Pollen\View\ViewInterface;
 use InvalidArgumentException;
 
 interface MailableInterface extends MailProxyInterface, ParamsBagAwareTraitInterface, PartialProxyInterface
@@ -35,7 +35,7 @@ interface MailableInterface extends MailProxyInterface, ParamsBagAwareTraitInter
      * @param array|string|null $key
      * @param mixed $default
      *
-     * @return string|int|array|mixed|ParamsBag
+     * @return string|int|array|ParamsBag
      *
      * @throws InvalidArgumentException
      */
@@ -243,7 +243,7 @@ interface MailableInterface extends MailProxyInterface, ParamsBagAwareTraitInter
      * @param string|null $view
      * @param array $data
      *
-     * @return ViewEngineInterface|string
+     * @return ViewInterface|string
      */
     public function view(?string $view = null, array $data = []);
 }

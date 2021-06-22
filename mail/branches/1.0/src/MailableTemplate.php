@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Pollen\Mail;
 
-use Pollen\View\PartialAwareViewLoader;
-use Pollen\View\ViewLoader;
+use Pollen\View\Engines\Plates\PlatesPartialAwareTemplateTrait;
+use Pollen\View\Engines\Plates\PlatesTemplate;
 use RuntimeException;
 
-class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterface
+class MailableTemplate extends PlatesTemplate
 {
-    use PartialAwareViewLoader;
+    use PlatesPartialAwareTemplateTrait;
 
     /**
      * Récupération de l'instance de délégation.
@@ -25,7 +25,7 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
             return $delegate;
         }
 
-        throw new RuntimeException('MailableViewLoader must have a delegate Mailable instance');
+        throw new RuntimeException('MailableTemplate must have a delegate Mailable instance');
     }
 
     /**
@@ -52,7 +52,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la liste des pièces jointes.
+     *
+     * @return array
      */
     public function getAttachments(): array
     {
@@ -60,7 +62,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la liste des destinataires en copie cachée.
+     *
+     * @return array
      */
     public function getBcc(): array
     {
@@ -68,7 +72,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la liste des destinataires en copie carbone.
+     *
+     * @return array
      */
     public function getCc(): array
     {
@@ -76,7 +82,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de l'encodage des caractères.
+     *
+     * @return string
      */
     public function getCharset(): string
     {
@@ -84,7 +92,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération du type de contenu du message.
+     *
+     * @return string
      */
     public function getContentType(): string
     {
@@ -92,7 +102,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de l'encodage du message.
+     *
+     * @return string
      */
     public function getEncoding(): string
     {
@@ -100,7 +112,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de l'expéditeur du message.
+     *
+     * @return array
      */
     public function getFrom(): array
     {
@@ -108,7 +122,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la liste des entêtes du messages.
+     *
+     * @return array
      */
     public function getHeaders(): array
     {
@@ -116,7 +132,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération du message au format HTML.
+     *
+     * @return string
      */
     public function getHtml(): string
     {
@@ -124,7 +142,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la langue d'expédition du message.
+     *
+     * @return string
      */
     public function getLocale(): string
     {
@@ -132,7 +152,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération du message au format texte brut ou HTML.
+     *
+     * @return string
      */
     public function getMessage(): string
     {
@@ -140,7 +162,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la liste des destinataires en réponse au message.
+     *
+     * @return array
      */
     public function getReplyTo(): array
     {
@@ -148,7 +172,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de l'objet du message.
+     *
+     * @return string
      */
     public function getSubject(): string
     {
@@ -156,7 +182,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération du message au format texte brut.
+     *
+     * @return string
      */
     public function getText(): string
     {
@@ -164,7 +192,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Récupération de la liste des destinataires.
+     *
+     * @return array
      */
     public function getTo(): array
     {
@@ -172,7 +202,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Vérification de la présence du format HTML dans le message.
+     *
+     * @return bool
      */
     public function hasHtml(): bool
     {
@@ -180,7 +212,9 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Vérification de la présence du format texte brut dans le message.
+     *
+     * @return bool
      */
     public function hasText(): bool
     {
@@ -188,7 +222,11 @@ class MailableViewLoader extends ViewLoader implements MailableViewLoaderInterfa
     }
 
     /**
-     * @inheritDoc
+     * Linéarisation des informations de contact.
+     *
+     * @param array $contacts Informations de contact
+     *
+     * @return array
      */
     public function linearizeContacts(array $contacts): array
     {
