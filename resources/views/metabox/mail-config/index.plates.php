@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Metabox\MetaboxViewLoaderInterface $this
+ * @var Pollen\Metabox\MetaboxTemplate $this
  */
 ?>
 <?php if ($info = $this->get('info', true)) : ?>

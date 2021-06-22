@@ -12,8 +12,9 @@ use Pollen\Support\ParamsBag;
 use Pollen\Support\Concerns\ParamsBagAwareTrait;
 use Pollen\Support\Proxy\MailProxy;
 use Pollen\Support\Proxy\PartialProxy;
-use Pollen\View\ViewEngine;
-use Pollen\View\ViewEngineInterface;
+use Pollen\View\View;
+use Pollen\View\Engines\Plates\PlatesViewEngine;
+use Pollen\View\ViewInterface;
 use RuntimeException;
 
 class Mailable implements MailableInterface
@@ -25,111 +26,93 @@ class Mailable implements MailableInterface
 
     /**
      * Moteur d'expédition du mail.
-     * @var MailerDriverInterface
      */
-    private $mailer;
+    private ?MailerDriverInterface $mailer = null;
 
     /**
      * Langue du message.
-     * @var string
      */
-    protected $locale;
+    protected string $locale = '';
 
     /**
      * Expéditeur du message.
-     * @var array
      */
-    protected $from;
+    protected array $from = [];
 
     /**
      * Liste des destinataires du message.
-     * @var array
      */
-    protected $to;
+    protected ?array $to = null;
 
     /**
      * Liste des destinataires en copie carbone.
-     * @var array
      */
-    protected $cc;
+    protected ?array $cc = null;
 
     /**
      * Liste des destinataires en copie carbone.
-     * @var array
      */
-    protected $bcc;
+    protected ?array $bcc = null;
 
     /**
      * Liste des destinataire de la réponse au message.
-     * @var array
      */
-    protected $replyTo;
+    protected ?array $replyTo = null;
 
     /**
      * Liste des pièces jointes au messages.
-     * @var array
      */
-    protected $attachments;
+    protected array $attachments = [];
 
     /**
      * Jeu des caractères du message.
-     * @var string
      */
-    protected $charset;
+    protected string $charset = 'UTF-8';
 
     /**
      * Encodage du message.
-     * @var string
      */
-    protected $encoding;
+    protected string $encoding = '';
 
     /**
      * Typage du contenu du message.
-     * @var string
      */
-    protected $contentType;
+    protected string $contentType = '';
 
     /**
      * Sujet du message.
-     * @var string
      */
-    protected $subject;
+    protected string $subject = '';
 
     /**
      * Contenu du message au format HTML.
-     * @var string
      */
-    protected $html;
+    protected string $html = '';
 
     /**
      * Contenu du message au format texte brut.
-     * @var string
      */
-    protected $text;
+    protected string $text = '';
 
     /**
      * Activation du formatage des propriétés CSS dans les balises HTML.
-     * @var bool
      */
-    protected $inlineCss;
+    protected bool $inlineCss = true;
 
     /**
      * Propriétés CSS du message au format HTML.
-     * @var string
      */
-    protected $css;
+    protected string $css = '';
 
     /**
      * Instance des données associées aux gabarits du message.
-     * @var ParamsBag
      */
-    protected $datasBag;
+    protected ?ParamsBag $datasBag = null;
 
     /**
      * Instance du moteur de gabarits d'affichage.
-     * @var ViewEngineInterface
      */
-    protected $viewEngine;
+    protected ?ViewInterface $view = null;
 
     /**
      * @param MailManagerInterface|null $mailManager
@@ -424,7 +407,7 @@ class Mailable implements MailableInterface
                  * Liste des données associées aux gabarits du message.
                  * @var array
                  */
-                'datas'         => [],
+                'datas'        => [],
                 /**
                  * Objet du message.
                  * @var string
@@ -706,9 +689,7 @@ class Mailable implements MailableInterface
      */
     public function view(?string $view = null, array $data = [])
     {
-        if (is_null($this->viewEngine)) {
-            $directory = null;
-            $overrideDir = null;
+        if ($this->view === null) {
             $default = $this->mail()->config('default.viewer', []);
 
             $directory = $this->params('viewer.directory');
@@ -744,22 +725,30 @@ class Mailable implements MailableInterface
                 }
             }
 
-            $this->viewEngine = new ViewEngine();
-            if ($container = $this->mail()->getContainer()) {
-                $this->viewEngine->setContainer($container);
-            }
+            $this->view = View::createFromPlates(
+                function (PlatesViewEngine $platesViewEngine) use ($directory, $overrideDir) {
+                    $platesViewEngine
+                        ->setDelegate($this)
+                        ->setTemplateClass(MailableTemplate::class)
+                        ->setDirectory($directory);
 
-            $this->viewEngine->setDirectory($directory)->setDelegate($this)->setLoader(MailableViewLoader::class);
+                    if ($overrideDir !== null) {
+                        $platesViewEngine->setOverrideDir($overrideDir);
+                    }
 
-            if ($overrideDir !== null) {
-                $this->viewEngine->addFolder('_override_dir', $overrideDir, true);
-            }
+                    if ($container = $this->mail()->getContainer()) {
+                        $platesViewEngine->setContainer($container);
+                    }
+
+                    return $platesViewEngine;
+                }
+            );
         }
 
         if (func_num_args() === 0) {
-            return $this->viewEngine;
+            return $this->view;
         }
 
-        return $this->viewEngine->render($view, $data);
+        return $this->view->render($view, $data);
     }
 }
