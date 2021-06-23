@@ -10,10 +10,15 @@ use Pollen\Support\Concerns\ParamsBagAwareTraitInterface;
 use Pollen\Support\ParamsBag;
 use Pollen\Support\Proxy\MailProxyInterface;
 use Pollen\Support\Proxy\PartialProxyInterface;
+use Pollen\Support\Proxy\ViewProxyInterface;
 use Pollen\View\ViewInterface;
 use InvalidArgumentException;
 
-interface MailableInterface extends MailProxyInterface, ParamsBagAwareTraitInterface, PartialProxyInterface
+interface MailableInterface extends
+    MailProxyInterface,
+    ParamsBagAwareTraitInterface,
+    PartialProxyInterface,
+    ViewProxyInterface
 {
     /**
      * Résolution de sortie de la classe sous la forme d'une chaîne de caractères.
@@ -236,14 +241,4 @@ interface MailableInterface extends MailProxyInterface, ParamsBagAwareTraitInter
      * @return static
      */
     public function setTo($to): MailableInterface;
-
-    /**
-     * Récupération de l'affichage d'un gabarit.
-     *
-     * @param string|null $view
-     * @param array $data
-     *
-     * @return ViewInterface|string
-     */
-    public function view(?string $view = null, array $data = []);
 }

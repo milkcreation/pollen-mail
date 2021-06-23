@@ -12,9 +12,8 @@ use Pollen\Support\ParamsBag;
 use Pollen\Support\Concerns\ParamsBagAwareTrait;
 use Pollen\Support\Proxy\MailProxy;
 use Pollen\Support\Proxy\PartialProxy;
-use Pollen\View\View;
+use Pollen\Support\Proxy\ViewProxy;
 use Pollen\View\Engines\Plates\PlatesViewEngine;
-use Pollen\View\ViewInterface;
 use RuntimeException;
 
 class Mailable implements MailableInterface
@@ -23,6 +22,7 @@ class Mailable implements MailableInterface
     use MailProxy;
     use ParamsBagAwareTrait;
     use PartialProxy;
+    use ViewProxy;
 
     /**
      * Moteur d'expédition du mail.
@@ -108,11 +108,6 @@ class Mailable implements MailableInterface
      * Instance des données associées aux gabarits du message.
      */
     protected ?ParamsBag $datasBag = null;
-
-    /**
-     * Instance du moteur de gabarits d'affichage.
-     */
-    protected ?ViewInterface $view = null;
 
     /**
      * @param MailManagerInterface|null $mailManager
@@ -687,7 +682,7 @@ class Mailable implements MailableInterface
     /**
      * @inheritDoc
      */
-    public function view(?string $view = null, array $data = [])
+    public function view(?string $name = null, array $data = [])
     {
         if ($this->view === null) {
             $default = $this->mail()->config('default.viewer', []);
@@ -725,30 +720,23 @@ class Mailable implements MailableInterface
                 }
             }
 
-            $this->view = View::createFromPlates(
-                function (PlatesViewEngine $platesViewEngine) use ($directory, $overrideDir) {
-                    $platesViewEngine
-                        ->setDelegate($this)
-                        ->setTemplateClass(MailableTemplate::class)
-                        ->setDirectory($directory);
+            $viewEngine = new PlatesViewEngine();
 
-                    if ($overrideDir !== null) {
-                        $platesViewEngine->setOverrideDir($overrideDir);
-                    }
+            $viewEngine->setDelegate($this)
+                ->setTemplateClass(MailableTemplate::class)
+                ->setDirectory($directory);
 
-                    if ($container = $this->mail()->getContainer()) {
-                        $platesViewEngine->setContainer($container);
-                    }
+            if ($overrideDir !== null) {
+                $viewEngine->setOverrideDir($overrideDir);
+            }
 
-                    return $platesViewEngine;
-                }
-            );
+            $this->view = $this->viewManager()->createView($viewEngine);
         }
 
         if (func_num_args() === 0) {
             return $this->view;
         }
 
-        return $this->view->render($view, $data);
+        return $this->view->render($name, $data);
     }
 }
