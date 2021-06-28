@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Mail\MailableTemplate $this
+ * @var Pollen\Mail\MailableTemplateInterface $this
  */
 echo sprintf(__('Ceci est un test d\'envoi de mail depuis le site %s', 'tify'), get_bloginfo('blogname')) . "\n\n" .
 __('Si ce mail, vous est parvenu c\'est qu\'il vous a été expédié depuis le site : ') . "\n" .

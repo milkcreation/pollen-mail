@@ -36,7 +36,7 @@ class MailServiceProvider extends BootableServiceProvider
         $this->getContainer()->add(
             MailerDriverInterface::class,
             function () {
-                return new PhpMailerDriver(new PHPMailer(Env::isDev()));
+                return new PhpMailerDriver(new PHPMailer(Env::inDev()));
             }
         );
 
