@@ -7,7 +7,7 @@
     "component",
     "cookie"
   ],
-  "time": "2021-06-23",
+  "time": "2021-06-28",
   "license": "MIT",
   "authors": [
     {
@@ -31,6 +31,8 @@
     "phpmailer/phpmailer": "^6.3",
     "pollen-solutions/support": "^1.0",
     "pollen-solutions/validation": "^1.0",
+    "pollen-solutions/view": "^1.0",
+    "pollen-solutions/view-extends": "^1.0",
     "symfony/dom-crawler": "^5.2"
   },
   "require-dev": {

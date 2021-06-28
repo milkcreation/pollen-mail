@@ -1,4 +1,4 @@
 <?php
 /**
- * @var Pollen\Mail\MailableTemplate $this
+ * @var Pollen\Mail\MailableTemplateInterface $this
  */

@@ -11,8 +11,8 @@ use Pollen\Support\ParamsBag;
 use Pollen\Support\Proxy\MailProxyInterface;
 use Pollen\Support\Proxy\PartialProxyInterface;
 use Pollen\Support\Proxy\ViewProxyInterface;
-use Pollen\View\ViewInterface;
 use InvalidArgumentException;
+use Pollen\View\ViewInterface;
 
 interface MailableInterface extends
     MailProxyInterface,
@@ -241,4 +241,14 @@ interface MailableInterface extends
      * @return static
      */
     public function setTo($to): MailableInterface;
+
+    /**
+     * Resolve view instance or return a particular template render.
+     *
+     * @param string|null $name.
+     * @param array $data
+     *
+     * @return ViewInterface|string
+     */
+    public function view(?string $name = null, array $data = []);
 }

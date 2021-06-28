@@ -175,6 +175,25 @@ interface MailerDriverInterface
     public function hasText(): bool;
 
     /**
+     * Contacts linearization.
+     *
+     * @param array<string, string> $contacts
+     *
+     * @return string[]
+     */
+    public function linearizeContacts(array $contacts): array;
+
+    /**
+     * Contact linearization.
+     *
+     * @param string $email
+     * @param string|null $name
+     *
+     * @return string
+     */
+    public function linearizeContact(string $email, ?string $name = null): string;
+
+    /**
      * Préparation de l'email en vue de l'expédition.
      *
      * @return boolean

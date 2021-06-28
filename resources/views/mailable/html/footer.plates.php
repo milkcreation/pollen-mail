@@ -1,8 +1,7 @@
 <?php
 /**
- * @var Pollen\Mail\MailableTemplate $this
+ * @var Pollen\Mail\MailableTemplateInterface $this
  */
-
 ?>
 <?php if ($this->get('infos')) : ?>
     <tr class="rowFooterContent">

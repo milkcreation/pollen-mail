@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Pollen\Mail\MailableTemplate $this
+ * @var Pollen\Mail\MailableTemplateInterface $this
  */
 ?>
 <?php if ($logo = $this->get('infos.logo')) : ?>

@@ -13,7 +13,7 @@ use Pollen\Support\Concerns\ParamsBagAwareTrait;
 use Pollen\Support\Proxy\MailProxy;
 use Pollen\Support\Proxy\PartialProxy;
 use Pollen\Support\Proxy\ViewProxy;
-use Pollen\View\Engines\Plates\PlatesViewEngine;
+use Pollen\View\ViewInterface;
 use RuntimeException;
 
 class Mailable implements MailableInterface
@@ -108,6 +108,11 @@ class Mailable implements MailableInterface
      * Instance des données associées aux gabarits du message.
      */
     protected ?ParamsBag $datasBag = null;
+
+    /**
+     * Template view instance.
+     */
+    protected ?ViewInterface $view = null;
 
     /**
      * @param MailManagerInterface|null $mailManager
@@ -720,17 +725,36 @@ class Mailable implements MailableInterface
                 }
             }
 
-            $viewEngine = new PlatesViewEngine();
-
-            $viewEngine->setDelegate($this)
-                ->setTemplateClass(MailableTemplate::class)
+            $this->view = $this->viewManager()->createView('plates')
                 ->setDirectory($directory);
 
             if ($overrideDir !== null) {
-                $viewEngine->setOverrideDir($overrideDir);
+                $this->view->setOverrideDir($overrideDir);
             }
 
-            $this->view = $this->viewManager()->createView($viewEngine);
+            $functions = [
+                'getAttachments',
+                'getBcc',
+                'getCc',
+                'getCharset',
+                'getContentType',
+                'getEncoding',
+                'getFrom',
+                'getHeaders',
+                'getHtml',
+                'getLocale',
+                'getMessage',
+                'getReplyTo',
+                'getSubject',
+                'getText',
+                'getTo',
+                'hasHtml',
+                'hasText',
+                'linearizeContacts'
+            ];
+            foreach ($functions as $fn) {
+                $this->view($fn, [$this->getMailer(), $fn]);
+            }
         }
 
         if (func_num_args() === 0) {

@@ -7,6 +7,7 @@ namespace Pollen\Mail\Drivers;
 use BadMethodCallException;
 use InvalidArgumentException;
 use PHPMailer\PHPMailer\PHPMailer;
+use Pollen\Mail\MailerDriver;
 use Pollen\Mail\MailerDriverInterface;
 use Throwable;
 use Exception;
@@ -14,13 +15,9 @@ use Exception;
 /**
  * @mixin PHPMailer
  */
-class PhpMailerDriver implements MailerDriverInterface
+class PhpMailerDriver extends MailerDriver
 {
-    /**
-     * Instance du pilote de traitement des emails.
-     * @var PHPMailer
-     */
-    protected $phpMailer;
+    protected PHPMailer $phpMailer;
 
     /**
      * @param PHPMailer|null $phpmailer Instance de PHPMailer.
