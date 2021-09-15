@@ -1,25 +1,19 @@
 {
   "name": "pollen-solutions/mail",
   "description": "Pollen Mail Component - Email Api",
-  "homepage": "https://www.presstify.com/pollen-solutions/mail/",
+  "homepage": "https://github.com/milkcreation/pollen-mail.git",
   "keywords": [
     "pollen-solutions",
     "component",
     "cookie"
   ],
-  "time": "2021-06-28",
+  "time": "2021-09-15",
   "license": "MIT",
   "authors": [
     {
       "name": "Jordy Manner",
       "email": "jordy@presstify.com",
       "role": "Developper"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://composer.presstify.com/pollen-solutions/"
     }
   ],
   "require": {
